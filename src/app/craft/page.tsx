@@ -1,0 +1,382 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight, ArrowRight, Check, Compass, Ruler, Shield, Sparkles, Layers, Eye } from "lucide-react";
+import SectionHeading from "@/components/ui/SectionHeading";
+import TechnicalRule from "@/components/ui/TechnicalRule";
+
+interface CraftPhase {
+  id: string;
+  number: string;
+  phaseLabel: string;
+  title: string;
+  subtitle: string;
+  narrative: string;
+  technicalSpecs: { label: string; value: string }[];
+  visualMode: "blueprint" | "timber" | "joinery" | "suspension" | "cushion" | "finish" | "habitat";
+  image: string;
+  quote: string;
+}
+
+const CRAFT_PHASES: CraftPhase[] = [
+  {
+    id: "sketch",
+    number: "01",
+    phaseLabel: "THE ARCHITECTURAL SKETCH",
+    title: "Proportions & Ergonomic Calibration",
+    subtitle: "Every Woods Decor piece begins with rigorous geometric vector calculation and human scale studies.",
+    narrative: "Before timber is touched, our lead design directors draft architectural elevation drawings calibrated to standard living room walkways and ceiling clearances. We establish seat depth (38 in), seat rake angle (12°), and cushion deflection profiles to ensure enduring comfort without aesthetic bulk.",
+    technicalSpecs: [
+      { label: "Drafting Format", value: "Vector 1:1 Scale CAD" },
+      { label: "Seat Clearance", value: "30\" Minimum Perimeter" },
+      { label: "Ergonomic Rake", value: "12° Recline Angle" },
+      { label: "Tolerances", value: "±1.5 mm Joinery Margin" }
+    ],
+    visualMode: "blueprint",
+    image: "/assets/woodsdecor/products/sofas/milano-1.jpg",
+    quote: "A sofa must possess architectural weight when viewed across an open gallery, yet feel intimate upon touch."
+  },
+  {
+    id: "timber",
+    number: "02",
+    phaseLabel: "THE TIMBER SELECTION",
+    title: "Kiln-Seasoned Hardwood Equilibrium",
+    subtitle: "Solid Indian Teak and Walnut seasoned to 8–10% moisture content in Mohali kilns.",
+    narrative: "Wood is an organic cellular structure that expands and contracts with humidity. At our integrated facility, rough-sawn hardwood logs rest in climate-controlled kilns for 6–8 weeks until cellular moisture reaches an exact 8–10% equilibrium, permanently neutralizing natural warping.",
+    technicalSpecs: [
+      { label: "Hardwood Species", value: "Indian Teak / Seasoned Walnut" },
+      { label: "Moisture Content", value: "8.5% Checked with Hydrometer" },
+      { label: "Grain Density", value: "Quarter-Sawn Straight Figure" },
+      { label: "Harvest Standard", value: "Certified Sustainable Reserves" }
+    ],
+    visualMode: "timber",
+    image: "/assets/woodsdecor/materials/walnut.jpg",
+    quote: "If the timber isn't brought to equilibrium, time will pull the joints apart. Seasoning is the silent guarantee."
+  },
+  {
+    id: "joinery",
+    number: "03",
+    phaseLabel: "THE STRUCTURAL JOINERY",
+    title: "Mortise, Tenon & Corner Load Blocks",
+    subtitle: "Interlocking hardwood mechanical connections built for generational longevity.",
+    narrative: "Rather than relying on metal brackets, plastic dowels, or surface staples, master carpenters carve interlocking tenons directly from solid timber rails. Internal corner blocks are screwed and doweled along grain axes to distribute dynamic loads across the entire frame skeleton.",
+    technicalSpecs: [
+      { label: "Primary Joint", value: "Deep Mortise & Tenon" },
+      { label: "Corner Blocks", value: "Solid Hardwood Triangular Gussets" },
+      { label: "Fasteners", value: "Concealed Stainless Steel Dowels" },
+      { label: "Frame Warranty", value: "Lifetime Atelier Structural Guarantee" }
+    ],
+    visualMode: "joinery",
+    image: "/assets/woodsdecor/workshop/carpentry.jpg",
+    quote: "A true joint holds by geometry, not by adhesive."
+  },
+  {
+    id: "suspension",
+    number: "04",
+    phaseLabel: "THE SUSPENSION CORE",
+    title: "Pocket Springs & Heavy Elastic Webbing",
+    subtitle: "Individually pocketed steel springs anchored with cross-woven tension webbing.",
+    narrative: "The seating platform combines high-tensile carbon steel pocket springs with criss-crossed, heat-sealed elastic webbing. Each spring operates independently, contouring to body pressure while dampening motion transfer across the sofa.",
+    technicalSpecs: [
+      { label: "Spring Construction", value: "Heat-Treated Carbon Steel" },
+      { label: "Webbing Matrix", value: "Italian High-Tension Cross-Weave" },
+      { label: "Noise Insulation", value: "Acoustic Felt Spring Wrapping" },
+      { label: "Sag Resistance", value: "Tested to 100,000 Cycles" }
+    ],
+    visualMode: "suspension",
+    image: "/assets/woodsdecor/workshop/upholstery.jpg",
+    quote: "True resilience is silent. You should never hear a quality sofa take your weight."
+  },
+  {
+    id: "cushioning",
+    number: "05",
+    phaseLabel: "THE CONTOUR SCULPTING",
+    title: "Multi-Density Foam & Feather-Down Wrap",
+    subtitle: "High-resilience core foam surrounded by channeled duck down envelopes.",
+    narrative: "We engineer cushions in three calibrated strata: a high-resilience 45-density core provides enduring structural loft, sandwiched between 32-density transition foam, and encased in a baffled feather-down envelope for immediate tactile softness upon lounging.",
+    technicalSpecs: [
+      { label: "Core Density", value: "45 kg/m³ High Resilience" },
+      { label: "Top Layer", value: "Channeled Duck Down Envelope" },
+      { label: "Cushion Interlining", value: "Down-Proof Cotton Ticking" },
+      { label: "Ergonomics", value: "Self-Recovering Loft" }
+    ],
+    visualMode: "cushion",
+    image: "/assets/woodsdecor/materials/boucle.jpg",
+    quote: "You should sink in two inches, then meet gentle, unwavering support."
+  },
+  {
+    id: "finish",
+    number: "06",
+    phaseLabel: "THE SURFACE ALCHEMY",
+    title: "Hand-Rubbed Organic Polish & Precision Stitching",
+    subtitle: "Multiple coats of organic satin oil and double-needle tailoring.",
+    narrative: "Exposed timber members undergo progressive hand-sanding from 120 to 600 grit before organic wax oils are hand-rubbed into the grain pores. Simultaneously, master upholsterers hand-sew blind piping and double-needle seams across heavy Belgian bouclé.",
+    technicalSpecs: [
+      { label: "Sand Sequence", value: "120 · 240 · 400 · 600 Grit" },
+      { label: "Finish Coats", value: "4 Layers Organic Hand-Rubbed Wax" },
+      { label: "Stitch Technique", value: "Double-Needle Saddle Stitch" },
+      { label: "Thread", value: "Bonded Polyester Heavy-Duty" }
+    ],
+    visualMode: "finish",
+    image: "/assets/woodsdecor/workshop/polish.jpg",
+    quote: "Polish does not seal wood away from you; it invites your hand to touch it."
+  },
+  {
+    id: "habitat",
+    number: "07",
+    phaseLabel: "THE COMPLETED HEIRLOOM",
+    title: "The Finished Piece in Its Spatial Habitat",
+    subtitle: "The completed Milano Sofa anchoring an architectural living room gallery.",
+    narrative: "After final directional lighting inspection and director certification, the completed piece is wrapped in breathable organic cotton, crated with rigid corner armor, and dispatched via our white-glove logistics team for in-home assembly anywhere in India.",
+    technicalSpecs: [
+      { label: "Hero Piece", value: "Milano 3-Seater Atelier Lounge" },
+      { label: "Dimensions", value: "W 90\" × D 38\" × H 32\"" },
+      { label: "Delivery Standard", value: "White-Glove Placement & Leveling" },
+      { label: "Atelier Origin", value: "Plot 786-787, Sector 82, Mohali" }
+    ],
+    visualMode: "habitat",
+    image: "/assets/woodsdecor/products/sofas/milano-1.jpg",
+    quote: "A finished Woods Decor piece is not a commercial product; it is an enduring member of the home."
+  }
+];
+
+export default function CraftJourneyInteractivePage() {
+  const [activePhaseIndex, setActivePhaseIndex] = useState(0);
+  const [activeOverlayView, setActiveOverlayView] = useState<"blueprint" | "photo" | "specs">("photo");
+  const currentPhase = CRAFT_PHASES[activePhaseIndex];
+
+  return (
+    <div className="pt-32 pb-24 bg-[#141312] text-[#FBF9F5] min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+        {/* Header */}
+        <div className="max-w-4xl mb-12 sm:mb-16">
+          <SectionHeading
+            number="03"
+            eyebrow="The Craftsmanship Journey"
+            title="The Making of a Piece."
+            subtitle="Follow the step-by-step transformation of raw timber and textiles into an architectural heirloom. An exploded view into the master disciplines of Woods Decor."
+            theme="dark"
+          />
+        </div>
+
+        {/* Phase Progress Bar / Interactive Timeline */}
+        <div className="sticky top-20 z-40 bg-[#141312]/95 backdrop-blur-md border border-[#2E2C2A] p-3 sm:p-4 mb-12 shadow-2xl">
+          <div className="flex items-center justify-between overflow-x-auto gap-2 sm:gap-4 no-scrollbar">
+            {CRAFT_PHASES.map((p, idx) => (
+              <button
+                key={p.id}
+                onClick={() => setActivePhaseIndex(idx)}
+                className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-xs font-sans uppercase tracking-[0.2em] whitespace-nowrap transition-all cursor-pointer ${
+                  activePhaseIndex === idx
+                    ? "bg-[#BFA16F] text-[#141312] font-semibold shadow-lg"
+                    : "bg-[#1F1D1B] text-[#8C8780] hover:text-white border border-[#2E2C2A]"
+                }`}
+              >
+                <span className="font-mono text-[10px]">{p.number}</span>
+                <span className="hidden md:inline">{p.phaseLabel.split(" ")[1] || p.phaseLabel}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Interactive Stage */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 bg-[#1F1D1B] border border-[#2E2C2A] p-6 sm:p-10 shadow-2xl mb-16 items-start">
+          {/* Left: Dynamic Visual & Blueprint Stage */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="flex items-center justify-between border-b border-[#2E2C2A] pb-3 text-xs font-sans">
+              <div className="flex items-center gap-2">
+                <Compass className="w-4 h-4 text-[#D4BC8B]" />
+                <span className="font-mono text-[11px] text-[#D4BC8B] font-semibold">
+                  PHASE {currentPhase.number} / 07: {currentPhase.phaseLabel}
+                </span>
+              </div>
+
+              {/* Overlay Mode Switcher */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setActiveOverlayView("photo")}
+                  className={`px-2.5 py-1 text-[10px] uppercase font-sans tracking-wider transition-colors ${
+                    activeOverlayView === "photo"
+                      ? "bg-[#BFA16F] text-[#141312] font-bold"
+                      : "bg-[#141312] text-[#8C8780] hover:text-white border border-[#2E2C2A]"
+                  }`}
+                >
+                  Atelier Photo
+                </button>
+                <button
+                  onClick={() => setActiveOverlayView("blueprint")}
+                  className={`px-2.5 py-1 text-[10px] uppercase font-sans tracking-wider transition-colors ${
+                    activeOverlayView === "blueprint"
+                      ? "bg-[#BFA16F] text-[#141312] font-bold"
+                      : "bg-[#141312] text-[#8C8780] hover:text-white border border-[#2E2C2A]"
+                  }`}
+                >
+                  Blueprint CAD
+                </button>
+              </div>
+            </div>
+
+            {/* Visual Canvas Container */}
+            <div className="relative aspect-[16/11] bg-[#141312] border border-[#2E2C2A] overflow-hidden flex items-center justify-center">
+              {activeOverlayView === "blueprint" ? (
+                /* Blueprint Vector Drawing Schematic */
+                <div className="absolute inset-0 p-8 flex flex-col justify-between bg-[#0E1724] border border-[#1E293B] text-cyan-400 font-mono text-xs">
+                  {/* Grid background */}
+                  <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38BDF8_1px,transparent_1px)] [background-size:16px_16px]" />
+
+                  <div className="relative z-10 flex items-center justify-between text-[10px] tracking-widest text-cyan-400/80 border-b border-cyan-800/40 pb-2">
+                    <span>WOODS DECOR SCHEMATIC // REV. 04</span>
+                    <span>TOLERANCE: ±1.5MM</span>
+                  </div>
+
+                  {/* SVG Blueprint Outline */}
+                  <div className="relative z-10 my-auto flex items-center justify-center">
+                    <svg viewBox="0 0 600 300" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
+                      {/* Sofa Outer Blueprint Envelope */}
+                      <rect x="50" y="80" width="500" height="140" rx="6" strokeDasharray="4 4" className="stroke-cyan-500/40" />
+                      {/* Backrest */}
+                      <path d="M 70 80 Q 300 65 530 80 L 530 140 L 70 140 Z" className="stroke-cyan-300" fill="rgba(56, 189, 248, 0.05)" />
+                      {/* Left Armrest */}
+                      <rect x="70" y="100" width="50" height="100" rx="4" className="stroke-cyan-400" fill="rgba(56, 189, 248, 0.1)" />
+                      {/* Right Armrest */}
+                      <rect x="480" y="100" width="50" height="100" rx="4" className="stroke-cyan-400" fill="rgba(56, 189, 248, 0.1)" />
+                      {/* 3 Cushions */}
+                      <rect x="130" y="120" width="110" height="80" rx="3" className="stroke-cyan-300" />
+                      <rect x="245" y="120" width="110" height="80" rx="3" className="stroke-cyan-300" />
+                      <rect x="360" y="120" width="110" height="80" rx="3" className="stroke-cyan-300" />
+                      {/* Timber Base Plinth & Feet */}
+                      <line x1="60" y1="220" x2="540" y2="220" className="stroke-amber-400 stroke-2" />
+                      <rect x="80" y="220" width="20" height="25" className="stroke-amber-400" fill="rgba(251, 191, 36, 0.2)" />
+                      <rect x="500" y="220" width="20" height="25" className="stroke-amber-400" fill="rgba(251, 191, 36, 0.2)" />
+                      {/* Dimension Arrow Marks */}
+                      <line x1="50" y1="260" x2="550" y2="260" className="stroke-cyan-400/80 stroke-1" />
+                      <text x="300" y="280" textAnchor="middle" fill="#38BDF8" fontSize="12">WIDTH: 90.0&quot; (228 CM)</text>
+                    </svg>
+                  </div>
+
+                  <div className="relative z-10 flex items-center justify-between text-[9px] text-cyan-400/80 border-t border-cyan-800/40 pt-2">
+                    <span>CAD LAYER: 03-STRUCTURE-JOINERY</span>
+                    <span>ACTIVE SCALE: 1:1 ATELIER</span>
+                  </div>
+                </div>
+              ) : (
+                /* High-Resolution Workshop Photo */
+                <Image
+                  src={currentPhase.image}
+                  alt={currentPhase.title}
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  priority
+                />
+              )}
+
+              {/* Callout Badge */}
+              <div className="absolute bottom-4 left-4 bg-[#141312]/90 backdrop-blur-md px-3.5 py-1.5 border border-white/10 text-white text-xs font-sans flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#BFA16F]" />
+                <span className="font-mono text-[10px] uppercase tracking-wider text-[#D4BC8B]">
+                  {currentPhase.technicalSpecs[0]?.label}: {currentPhase.technicalSpecs[0]?.value}
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Step Navigation Controls */}
+            <div className="flex items-center justify-between pt-2">
+              <button
+                disabled={activePhaseIndex === 0}
+                onClick={() => setActivePhaseIndex((prev) => Math.max(0, prev - 1))}
+                className="px-4 py-2 border border-[#2E2C2A] text-xs font-sans uppercase tracking-wider text-[#8C8780] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              >
+                ← Previous Phase
+              </button>
+
+              <span className="font-mono text-xs text-[#BFA16F]">
+                {activePhaseIndex + 1} of {CRAFT_PHASES.length}
+              </span>
+
+              <button
+                disabled={activePhaseIndex === CRAFT_PHASES.length - 1}
+                onClick={() => setActivePhaseIndex((prev) => Math.min(CRAFT_PHASES.length - 1, prev + 1))}
+                className="px-4 py-2 border border-[#2E2C2A] text-xs font-sans uppercase tracking-wider text-[#8C8780] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Next Phase →
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Technical Narrative & Spec Breakdown */}
+          <div className="lg:col-span-5 space-y-6">
+            <div>
+              <span className="font-mono text-sm text-[#D4BC8B] font-semibold block mb-1">
+                STAGE {currentPhase.number}
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-[#FFFFFF] font-normal leading-tight">
+                {currentPhase.title}
+              </h2>
+              <p className="font-serif text-lg text-[#D8CEBE] italic mt-2">
+                &ldquo;{currentPhase.subtitle}&rdquo;
+              </p>
+            </div>
+
+            <p className="text-sm font-sans font-normal text-[#E8E2D5] leading-relaxed">
+              {currentPhase.narrative}
+            </p>
+
+            {/* Craftsman Quote Box */}
+            <div className="bg-[#141312] border-l-2 border-[#BFA16F] p-4 text-xs font-serif italic text-[#FBF9F5]">
+              &ldquo;{currentPhase.quote}&rdquo;
+            </div>
+
+            {/* Technical Parameters Matrix */}
+            <div className="bg-[#141312] border border-[#2E2C2A] p-5 space-y-3">
+              <div className="text-[10px] font-sans uppercase tracking-widest text-[#D4BC8B] font-semibold border-b border-[#2E2C2A] pb-2">
+                Atelier Engineering Parameters
+              </div>
+              <div className="space-y-2 text-xs font-sans">
+                {currentPhase.technicalSpecs.map((spec, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <span className="text-[#8C8780]">{spec.label}:</span>
+                    <span className="text-white font-medium font-mono text-[11px]">{spec.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="pt-4 border-t border-[#2E2C2A] flex items-center gap-4">
+              <Link
+                href="/configurator"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#BFA16F] text-[#141312] hover:bg-white py-3.5 text-xs font-sans uppercase tracking-[0.2em] font-semibold transition-all shadow-xl"
+              >
+                <span>Customize This Piece</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <TechnicalRule label="ATELIER DISCIPLINES" theme="dark" />
+
+        {/* 7 Phase Overview Strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-16">
+          {CRAFT_PHASES.slice(0, 4).map((p, idx) => (
+            <div
+              key={p.id}
+              onClick={() => setActivePhaseIndex(idx)}
+              className={`p-6 border transition-all cursor-pointer ${
+                activePhaseIndex === idx
+                  ? "bg-[#1F1D1B] border-[#BFA16F] shadow-xl"
+                  : "bg-[#141312] border-[#2E2C2A] hover:border-white/30"
+              }`}
+            >
+              <div className="font-mono text-sm text-[#D4BC8B] mb-2 font-bold">{p.number}</div>
+              <h3 className="font-serif text-lg text-white font-medium mb-1">{p.title}</h3>
+              <p className="text-xs font-sans text-[#8C8780] line-clamp-2">{p.subtitle}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

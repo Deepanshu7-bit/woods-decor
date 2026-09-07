@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+:root {
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', 'Jost', sans-serif;
+  
+  --bg-bone: #FBF9F5;
+  --bg-bone-surface: #F4F0E8;
+  --border-travertine: #E8E2D5;
+  --ink-charcoal: #141312;
+  --text-muted: #6B665F;
+  --accent-brass: #BFA16F;
+  --accent-brass-dark: #9E7E47;
+  --accent-walnut: #4A3528;
+}
+
+@theme {
+  --color-bone-50: #FBF9F5;
+  --color-bone-100: #F4F0E8;
+  --color-bone-200: #E8E2D5;
+  --color-bone-300: #D8CEBE;
+  
+  --color-charcoal-900: #141312;
+  --color-charcoal-800: #1F1D1B;
+  --color-charcoal-700: #2E2C2A;
+  --color-charcoal-500: #66625D;
+  --color-charcoal-400: #8C8780;
+  
+  --color-walnut-800: #33231A;
+  --color-walnut-700: #4A3528;
+  --color-walnut-600: #5C4033;
+  
+  --color-brass-400: #D4BC8B;
+  --color-brass-500: #BFA16F;
+  --color-brass-600: #9E7E47;
+  
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', 'Jost', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-bone);
+  color: var(--ink-charcoal);
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: var(--bg-bone);
+  color: var(--ink-charcoal);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #BFA16F;
+  color: #FFFFFF;
+}
+
+/* Typography Helpers */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Subtle Architectural Grid and Lines */
+.hairline-b {
+  border-bottom: 1px solid var(--border-travertine);
+}
+
+.hairline-t {
+  border-top: 1px solid var(--border-travertine);
+}
+
+.hairline-r {
+  border-right: 1px solid var(--border-travertine);
+}
+
+.hairline-l {
+  border-left: 1px solid var(--border-travertine);
+}
+
+.hairline-all {
+  border: 1px solid var(--border-travertine);
+}
+
+/* Dimension Line Accents */
+.dimension-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dimension-line::before,
+.dimension-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 1px;
+  height: 8px;
+  background-color: currentColor;
+  transform: translateY(-50%);
+}
+
+.dimension-line::before {
+  left: 0;
+}
+
+.dimension-line::after {
+  right: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-bone);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8CEBE;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #BFA16F;
+}
