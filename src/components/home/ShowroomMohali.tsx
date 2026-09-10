@@ -13,7 +13,7 @@ export default function ShowroomMohali() {
           {/* Left Showroom Information */}
           <div className="lg:col-span-6 space-y-6">
             <SectionHeading
-              number="09"
+              number="06"
               eyebrow="The Atelier Showroom"
               title="Experience Woods Decor in person."
               subtitle="Visit our flagship showroom and active manufacturing facility in Mohali. Experience scale, touch solid wood finishes, and inspect active upholstery craftsmanship with our design directors."

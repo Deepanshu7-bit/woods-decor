@@ -187,18 +187,23 @@ function ConfiguratorContent() {
                   priority
                 />
 
-                {/* Layer 2: Dynamic Real-Time Material & Color Matrix Tint Layer */}
+                {/* Layer 2: Dual-Pass Architectural Material Shader */}
                 <div
-                  className="absolute inset-0 pointer-events-none transition-all duration-700 mix-blend-multiply opacity-40"
+                  className="absolute inset-0 pointer-events-none transition-all duration-700 mix-blend-color opacity-75"
                   style={{
-                    backgroundColor: selectedFabric.colorHex,
-                    backdropFilter: selectedFabric.hueFilter
+                    backgroundColor: selectedFabric.colorHex
+                  }}
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none transition-all duration-700 mix-blend-overlay opacity-35"
+                  style={{
+                    backgroundColor: selectedFabric.colorHex
                   }}
                 />
 
-                {/* Layer 3: Specular Highlight Lighting Layer */}
+                {/* Layer 3: Specular Highlight & Tactile Texture */}
                 <div
-                  className="absolute inset-0 pointer-events-none transition-opacity duration-700 mix-blend-soft-light opacity-30"
+                  className="absolute inset-0 pointer-events-none transition-opacity duration-700 mix-blend-soft-light opacity-25"
                   style={{
                     background: selectedFabric.texturePattern
                   }}

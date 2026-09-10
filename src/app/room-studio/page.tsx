@@ -121,6 +121,87 @@ export default function RoomStudioPage() {
     downloadAnchor.remove();
   };
 
+  const handleDownloadSnapshot = () => {
+    if (!canvasRef.current) return;
+    const canvas = document.createElement("canvas");
+    const rect = canvasRef.current.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.scale(2, 2);
+    // Draw background wall
+    ctx.fillStyle = activePresetId === "penthouse" ? "#1A1918" : "#242220";
+    ctx.fillRect(0, 0, rect.width, rect.height);
+    // Draw floor
+    ctx.fillStyle = activePresetId === "penthouse" ? "#121110" : "#181716";
+    ctx.fillRect(0, rect.height * 0.6, rect.width, rect.height * 0.4);
+
+    // Draw floor dividing line
+    ctx.strokeStyle = "#3D332B";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, rect.height * 0.6);
+    ctx.lineTo(rect.width, rect.height * 0.6);
+    ctx.stroke();
+
+    // Draw watermark
+    ctx.fillStyle = "#BFA16F";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText(`WOODS DECOR ATELIER · ${currentPreset.name.toUpperCase()}`, 24, 34);
+
+    if (placedItems.length === 0) {
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `Woods_Decor_${currentPreset.name.replace(/\s+/g, "_")}_Render.png`;
+      link.href = dataUrl;
+      link.click();
+      return;
+    }
+
+    let loaded = 0;
+    placedItems.forEach((item) => {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.src = item.image;
+      img.onload = () => {
+        const itemWidth = 180 * item.scale;
+        const itemHeight = 135 * item.scale;
+        const itemX = (item.x / 100) * rect.width - itemWidth / 2;
+        const itemY = (item.y / 100) * rect.height - itemHeight / 2;
+        ctx.save();
+        ctx.translate(itemX + itemWidth / 2, itemY + itemHeight / 2);
+        ctx.rotate((item.rotation * Math.PI) / 180);
+        // Contact Shadow
+        ctx.fillStyle = "rgba(0,0,0,0.55)";
+        ctx.beginPath();
+        ctx.ellipse(0, itemHeight / 2 - 4, itemWidth * 0.45, 8, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.drawImage(img, -itemWidth / 2, -itemHeight / 2, itemWidth, itemHeight);
+        ctx.restore();
+        loaded++;
+        if (loaded === placedItems.length) {
+          const dataUrl = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.download = `Woods_Decor_${currentPreset.name.replace(/\s+/g, "_")}_Render.png`;
+          link.href = dataUrl;
+          link.click();
+        }
+      };
+      img.onerror = () => {
+        loaded++;
+        if (loaded === placedItems.length) {
+          const dataUrl = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.download = `Woods_Decor_${currentPreset.name.replace(/\s+/g, "_")}_Render.png`;
+          link.href = dataUrl;
+          link.click();
+        }
+      };
+    });
+  };
+
   const waDossierUrl = formatPriceRequest(
     `Room Studio Dossier (${serializedDossier.presetName}): Includes ${serializedDossier.items
       .map((i) => `${i.name} [${i.fabric} / ${i.finish}]`)
@@ -150,6 +231,14 @@ export default function RoomStudioPage() {
             >
               <Plus className="w-4 h-4" />
               <span>Add Furniture</span>
+            </button>
+
+            <button
+              onClick={handleDownloadSnapshot}
+              className="inline-flex items-center gap-2 bg-[#1F1D1B] text-white border border-[#2E2C2A] px-4 py-2.5 text-xs font-sans uppercase tracking-[0.2em] font-medium hover:border-[#BFA16F] hover:text-[#BFA16F] transition-all cursor-pointer shadow-lg"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Image (PNG)</span>
             </button>
 
             <button
@@ -203,6 +292,9 @@ export default function RoomStudioPage() {
                 style={{ background: currentPreset.floorStyle }}
               />
 
+              {/* Architectural Baseboard / Skirting Line */}
+              <div className="absolute inset-x-0 bottom-[40%] h-[3px] bg-gradient-to-r from-[#2A241F] via-[#3D332B] to-[#2A241F] border-b border-black/40 shadow-sm pointer-events-none" />
+
               {/* Architectural Ambient Shadow Grid */}
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#FFFFFF_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
@@ -232,6 +324,9 @@ export default function RoomStudioPage() {
                         : "hover:ring-1 hover:ring-white/40"
                     }`}
                   >
+                    {/* Perspective Floor Contact Shadow */}
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[88%] h-4 bg-black/60 rounded-full blur-md -z-10 transform scale-y-50 pointer-events-none" />
+
                     {/* Furniture Item Graphic */}
                     <div className="relative w-44 sm:w-56 md:w-64 aspect-[4/3] drop-shadow-[0_20px_25px_rgba(0,0,0,0.6)]">
                       <Image

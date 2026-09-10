@@ -10,7 +10,7 @@ export default function MaterialsPreview() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="max-w-3xl mb-16">
           <SectionHeading
-            number="04"
+            number="03"
             eyebrow="Materiality &amp; Tactility"
             title="Honest materials that age with grace."
             subtitle="We specify authentic, certified solid hardwoods, unbleached linens, architectural bouclés, and vegetable-tanned hides. No synthetic shortcuts; only substances that develop character over time."

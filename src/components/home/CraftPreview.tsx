@@ -11,7 +11,7 @@ export default function CraftPreview() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <SectionHeading
-            number="03"
+            number="07"
             eyebrow="The Craftsmanship"
             title="Three wings of artisanal discipline."
             subtitle="Inside our integrated Mohali facility, dedicated master craftsmen in Carpentry, Polish, and Upholstery transform raw hardwoods and textiles into enduring heirlooms."

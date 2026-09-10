@@ -11,7 +11,7 @@ export default function BespokeSection() {
           {/* Left Narrative */}
           <div className="lg:col-span-6 space-y-6">
             <SectionHeading
-              number="07"
+              number="04"
               eyebrow="Private Commissions"
               title="Your space. Your proportions. Your piece."
               subtitle="Beyond our signature collections, Woods Decor operates a dedicated private commission atelier for architects, interior designers, and homeowners seeking one-of-a-kind bespoke creations."

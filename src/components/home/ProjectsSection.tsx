@@ -11,7 +11,7 @@ export default function ProjectsSection() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <SectionHeading
-            number="08"
+            number="05"
             eyebrow="Architectural Works"
             title="Private residences &amp; commissioned suites."
             subtitle="Explore how Woods Decor bespoke pieces anchor high-end private residences and modern architecture across India."

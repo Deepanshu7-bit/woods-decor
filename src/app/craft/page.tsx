@@ -221,44 +221,143 @@ export default function CraftJourneyInteractivePage() {
             {/* Visual Canvas Container */}
             <div className="relative aspect-[16/11] bg-[#141312] border border-[#2E2C2A] overflow-hidden flex items-center justify-center">
               {activeOverlayView === "blueprint" ? (
-                /* Blueprint Vector Drawing Schematic */
-                <div className="absolute inset-0 p-8 flex flex-col justify-between bg-[#0E1724] border border-[#1E293B] text-cyan-400 font-mono text-xs">
+                /* Dynamic Animated Blueprint Vector Drawing Schematic */
+                <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-[#0B111A] border border-[#1E293B] text-cyan-400 font-mono text-xs select-none">
                   {/* Grid background */}
                   <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#38BDF8_1px,transparent_1px)] [background-size:16px_16px]" />
 
                   <div className="relative z-10 flex items-center justify-between text-[10px] tracking-widest text-cyan-400/80 border-b border-cyan-800/40 pb-2">
-                    <span>WOODS DECOR SCHEMATIC // REV. 04</span>
-                    <span>TOLERANCE: ±1.5MM</span>
+                    <span>WOODS DECOR CAD // {currentPhase.phaseLabel}</span>
+                    <span className="text-amber-400">TOLERANCE: ±1.5MM</span>
                   </div>
 
-                  {/* SVG Blueprint Outline */}
-                  <div className="relative z-10 my-auto flex items-center justify-center">
-                    <svg viewBox="0 0 600 300" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
-                      {/* Sofa Outer Blueprint Envelope */}
-                      <rect x="50" y="80" width="500" height="140" rx="6" strokeDasharray="4 4" className="stroke-cyan-500/40" />
-                      {/* Backrest */}
-                      <path d="M 70 80 Q 300 65 530 80 L 530 140 L 70 140 Z" className="stroke-cyan-300" fill="rgba(56, 189, 248, 0.05)" />
-                      {/* Left Armrest */}
-                      <rect x="70" y="100" width="50" height="100" rx="4" className="stroke-cyan-400" fill="rgba(56, 189, 248, 0.1)" />
-                      {/* Right Armrest */}
-                      <rect x="480" y="100" width="50" height="100" rx="4" className="stroke-cyan-400" fill="rgba(56, 189, 248, 0.1)" />
-                      {/* 3 Cushions */}
-                      <rect x="130" y="120" width="110" height="80" rx="3" className="stroke-cyan-300" />
-                      <rect x="245" y="120" width="110" height="80" rx="3" className="stroke-cyan-300" />
-                      <rect x="360" y="120" width="110" height="80" rx="3" className="stroke-cyan-300" />
-                      {/* Timber Base Plinth & Feet */}
-                      <line x1="60" y1="220" x2="540" y2="220" className="stroke-amber-400 stroke-2" />
-                      <rect x="80" y="220" width="20" height="25" className="stroke-amber-400" fill="rgba(251, 191, 36, 0.2)" />
-                      <rect x="500" y="220" width="20" height="25" className="stroke-amber-400" fill="rgba(251, 191, 36, 0.2)" />
-                      {/* Dimension Arrow Marks */}
-                      <line x1="50" y1="260" x2="550" y2="260" className="stroke-cyan-400/80 stroke-1" />
-                      <text x="300" y="280" textAnchor="middle" fill="#38BDF8" fontSize="12">WIDTH: 90.0&quot; (228 CM)</text>
-                    </svg>
+                  {/* SVG Blueprint Outline - Dynamic Per Phase */}
+                  <div className="relative z-10 my-auto flex items-center justify-center w-full py-4">
+                    {currentPhase.id === "sketch" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
+                        {/* Perspective Grid & Guidelines */}
+                        <line x1="50" y1="240" x2="550" y2="240" className="stroke-cyan-800/80" strokeDasharray="4 4" />
+                        <line x1="100" y1="40" x2="100" y2="240" className="stroke-cyan-800/80" strokeDasharray="4 4" />
+                        <line x1="500" y1="40" x2="500" y2="240" className="stroke-cyan-800/80" strokeDasharray="4 4" />
+                        {/* Ergonomic Recline Angle */}
+                        <path d="M 120 220 L 220 220 L 280 90 L 160 90 Z" className="stroke-cyan-300 stroke-2" fill="rgba(56, 189, 248, 0.08)" />
+                        <path d="M 220 220 L 480 220 L 440 90 L 280 90 Z" className="stroke-cyan-400 stroke-2" fill="rgba(56, 189, 248, 0.04)" />
+                        {/* Angle Arc Indicator */}
+                        <path d="M 240 220 A 40 40 0 0 0 235 180" className="stroke-amber-400 stroke-2" />
+                        <text x="250" y="200" fill="#FBBF24" fontSize="11">12° RAKE</text>
+                        {/* Dimensions */}
+                        <line x1="120" y1="250" x2="480" y2="250" className="stroke-cyan-400" />
+                        <text x="300" y="268" textAnchor="middle" fill="#38BDF8" fontSize="11">SEAT DEPTH: 38.0&quot; (965 MM)</text>
+                      </svg>
+                    )}
+
+                    {currentPhase.id === "timber" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-amber-400 fill-none stroke-[1.5]">
+                        {/* Timber Kiln Log Cross Section */}
+                        <circle cx="200" cy="140" r="90" className="stroke-amber-500/40 stroke-2" strokeDasharray="6 4" />
+                        <circle cx="200" cy="140" r="70" className="stroke-amber-400/60" />
+                        <circle cx="200" cy="140" r="50" className="stroke-amber-300/70" />
+                        <circle cx="200" cy="140" r="30" className="stroke-amber-200" />
+                        <circle cx="200" cy="140" r="6" fill="#FBBF24" />
+                        {/* Hardwood Cut Planks */}
+                        <rect x="340" y="80" width="200" height="28" rx="2" className="stroke-cyan-400 stroke-2" fill="rgba(56, 189, 248, 0.1)" />
+                        <rect x="340" y="125" width="200" height="28" rx="2" className="stroke-cyan-400 stroke-2" fill="rgba(56, 189, 248, 0.1)" />
+                        <rect x="340" y="170" width="200" height="28" rx="2" className="stroke-cyan-400 stroke-2" fill="rgba(56, 189, 248, 0.1)" />
+                        <text x="440" y="98" textAnchor="middle" fill="#38BDF8" fontSize="10">SEASONED TEAK RAIL</text>
+                        <text x="440" y="143" textAnchor="middle" fill="#FBBF24" fontSize="10">8.5% EQUILIBRIUM</text>
+                        <text x="440" y="188" textAnchor="middle" fill="#38BDF8" fontSize="10">QUARTER-SAWN</text>
+                      </svg>
+                    )}
+
+                    {currentPhase.id === "joinery" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
+                        {/* Interlocking Mortise & Tenon Exploded View */}
+                        <rect x="100" y="100" width="140" height="80" rx="3" className="stroke-cyan-300 stroke-2" fill="rgba(56, 189, 248, 0.08)" />
+                        <rect x="220" y="120" width="50" height="40" className="stroke-amber-400 stroke-2" fill="rgba(251, 191, 36, 0.2)" />
+                        {/* Tenon Slot */}
+                        <rect x="330" y="100" width="160" height="80" rx="3" className="stroke-cyan-300 stroke-2" fill="rgba(56, 189, 248, 0.08)" />
+                        <rect x="330" y="120" width="40" height="40" className="stroke-amber-400 stroke-2" strokeDasharray="3 3" />
+                        {/* Assembly Vector Arrows */}
+                        <path d="M 280 140 L 320 140" className="stroke-amber-400 stroke-2" markerEnd="url(#arrow)" />
+                        <line x1="280" y1="135" x2="320" y2="140" className="stroke-amber-400 stroke-2" />
+                        <line x1="280" y1="145" x2="320" y2="140" className="stroke-amber-400 stroke-2" />
+                        <text x="300" y="175" textAnchor="middle" fill="#FBBF24" fontSize="11">MORTISE &amp; TENON MATING</text>
+                      </svg>
+                    )}
+
+                    {currentPhase.id === "suspension" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
+                        {/* Pocket Spring Array */}
+                        {[120, 200, 280, 360, 440].map((x, i) => (
+                          <g key={i}>
+                            <rect x={x} y="80" width="50" height="110" rx="4" className="stroke-cyan-300 stroke-2" fill="rgba(56, 189, 248, 0.05)" />
+                            <path d={`M ${x+10} 100 Q ${x+25} 90 ${x+40} 100 Q ${x+25} 115 ${x+10} 130 Q ${x+25} 145 ${x+40} 160`} className="stroke-amber-400 stroke-2" />
+                          </g>
+                        ))}
+                        {/* Elastic Cross-Woven Webbing Matrix */}
+                        <line x1="80" y1="210" x2="520" y2="210" className="stroke-cyan-400 stroke-2" strokeDasharray="8 4" />
+                        <line x1="80" y1="225" x2="520" y2="225" className="stroke-cyan-400 stroke-2" strokeDasharray="8 4" />
+                        <text x="300" y="250" textAnchor="middle" fill="#38BDF8" fontSize="11">ITALIAN HIGH-TENSILE MATRIX // 100,000 CYCLES</text>
+                      </svg>
+                    )}
+
+                    {currentPhase.id === "cushioning" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
+                        {/* Multi-Strata Density Cushion Slice */}
+                        <rect x="120" y="60" width="360" height="40" rx="4" className="stroke-amber-300" fill="rgba(251, 191, 36, 0.15)" />
+                        <text x="300" y="85" textAnchor="middle" fill="#FBBF24" fontSize="11">LAYER 1: CHANNELED DUCK DOWN ENVELOPE</text>
+
+                        <rect x="120" y="105" width="360" height="50" rx="4" className="stroke-cyan-400 stroke-2" fill="rgba(56, 189, 248, 0.1)" />
+                        <text x="300" y="135" textAnchor="middle" fill="#38BDF8" fontSize="11">LAYER 2: 32 KG/M³ ERGONOMIC TRANSITION FOAM</text>
+
+                        <rect x="120" y="160" width="360" height="60" rx="4" className="stroke-cyan-500 stroke-2" fill="rgba(56, 189, 248, 0.2)" />
+                        <text x="300" y="195" textAnchor="middle" fill="#38BDF8" fontSize="11">LAYER 3: 45 KG/M³ HIGH-RESILIENCE STRUCTURAL CORE</text>
+                      </svg>
+                    )}
+
+                    {currentPhase.id === "finish" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-amber-400 fill-none stroke-[1.5]">
+                        {/* Sanding & Polish Progression */}
+                        <rect x="80" y="100" width="100" height="70" rx="3" className="stroke-amber-600" />
+                        <text x="130" y="140" textAnchor="middle" fill="#D97706" fontSize="11">120 GRIT</text>
+
+                        <rect x="195" y="100" width="100" height="70" rx="3" className="stroke-amber-500" />
+                        <text x="245" y="140" textAnchor="middle" fill="#F59E0B" fontSize="11">240 GRIT</text>
+
+                        <rect x="310" y="100" width="100" height="70" rx="3" className="stroke-amber-400" />
+                        <text x="360" y="140" textAnchor="middle" fill="#FBBF24" fontSize="11">400 GRIT</text>
+
+                        <rect x="425" y="100" width="100" height="70" rx="3" className="stroke-cyan-300 stroke-2" fill="rgba(56, 189, 248, 0.15)" />
+                        <text x="475" y="140" textAnchor="middle" fill="#38BDF8" fontSize="11">600 GRIT</text>
+
+                        {/* Saddle Stitch Vectors */}
+                        <line x1="80" y1="210" x2="525" y2="210" className="stroke-amber-300 stroke-2" strokeDasharray="6 4" />
+                        <text x="300" y="235" textAnchor="middle" fill="#FBBF24" fontSize="11">DOUBLE-NEEDLE HAND SADDLE STITCHING</text>
+                      </svg>
+                    )}
+
+                    {currentPhase.id === "habitat" && (
+                      <svg viewBox="0 0 600 280" className="w-full max-w-md stroke-cyan-400 fill-none stroke-[1.5]">
+                        {/* Completed Heirloom Sofa Elevation */}
+                        <rect x="50" y="70" width="500" height="140" rx="6" className="stroke-cyan-300 stroke-2" fill="rgba(56, 189, 248, 0.06)" />
+                        <path d="M 70 70 Q 300 55 530 70 L 530 130 L 70 130 Z" className="stroke-cyan-200" fill="rgba(56, 189, 248, 0.1)" />
+                        <rect x="70" y="90" width="50" height="100" rx="4" className="stroke-cyan-400" fill="rgba(56, 189, 248, 0.15)" />
+                        <rect x="480" y="90" width="50" height="100" rx="4" className="stroke-cyan-400" fill="rgba(56, 189, 248, 0.15)" />
+                        <rect x="130" y="110" width="110" height="80" rx="3" className="stroke-cyan-300" />
+                        <rect x="245" y="110" width="110" height="80" rx="3" className="stroke-cyan-300" />
+                        <rect x="360" y="110" width="110" height="80" rx="3" className="stroke-cyan-300" />
+                        <line x1="60" y1="210" x2="540" y2="210" className="stroke-amber-400 stroke-2" />
+                        <rect x="80" y="210" width="20" height="25" className="stroke-amber-400" fill="#FBBF24" />
+                        <rect x="500" y="210" width="20" height="25" className="stroke-amber-400" fill="#FBBF24" />
+                        <line x1="50" y1="250" x2="550" y2="250" className="stroke-cyan-400/80 stroke-1" />
+                        <text x="300" y="268" textAnchor="middle" fill="#38BDF8" fontSize="12">FINISHED ELEVATION: 90.0&quot; × 38.0&quot; × 32.0&quot;</text>
+                      </svg>
+                    )}
                   </div>
 
                   <div className="relative z-10 flex items-center justify-between text-[9px] text-cyan-400/80 border-t border-cyan-800/40 pt-2">
-                    <span>CAD LAYER: 03-STRUCTURE-JOINERY</span>
-                    <span>ACTIVE SCALE: 1:1 ATELIER</span>
+                    <span>CAD LAYER: {currentPhase.number}-{currentPhase.visualMode.toUpperCase()}</span>
+                    <span className="text-amber-400">STATUS: VERIFIED SPECIFICATION</span>
                   </div>
                 </div>
               ) : (

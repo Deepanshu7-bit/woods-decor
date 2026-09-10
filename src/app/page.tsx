@@ -16,35 +16,37 @@ import FinalCTA from "@/components/home/FinalCTA";
 export default function HomePage() {
   return (
     <div className="flex flex-col w-full">
+      {/* ACT I: THE DAYLIGHT PAVILION */}
       {/* 01: Entrance */}
       <CinematicHero />
 
       {/* 02: Brand Intro & Heritage */}
       <BrandIntroduction />
 
-      {/* 03: Collections */}
+      {/* 03: Collections Exhibition */}
       <CollectionsExhibition />
 
-      {/* 04: The Craft Journey */}
-      <CraftPreview />
-
-      {/* 05: Materials & Tactility */}
+      {/* 04: Materials & Tactility */}
       <MaterialsPreview />
 
-      {/* 06: Make It Yours Configurator */}
-      <ConfiguratorPreview />
-
-      {/* 07: Room Studio Spatial Planner */}
-      <RoomStudioPreview />
-
-      {/* 08: Bespoke Private Commissions */}
+      {/* 05: Bespoke Private Commissions */}
       <BespokeSection />
 
-      {/* 09: Architectural Projects */}
+      {/* 06: Architectural Projects */}
       <ProjectsSection />
 
-      {/* 10: Showroom & Mohali Works */}
+      {/* 07: Flagship Showroom Mohali */}
       <ShowroomMohali />
+
+      {/* ACT II: THE ATELIER VAULT & INTERACTIVE SUITE */}
+      {/* 08: The Craft Journey */}
+      <CraftPreview />
+
+      {/* 09: Make It Yours Configurator */}
+      <ConfiguratorPreview />
+
+      {/* 10: Room Studio Spatial Planner */}
+      <RoomStudioPreview />
 
       {/* 11: Patrons & Testimonials */}
       <TestimonialsSection />

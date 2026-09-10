@@ -12,7 +12,7 @@ export default function RoomStudioPreview() {
           {/* Left Narrative */}
           <div className="lg:col-span-5 space-y-6">
             <SectionHeading
-              number="06"
+              number="09"
               eyebrow="Spatial Composition"
               title="Design your room in complete harmony."
               subtitle="Step into Room Studio. Curate an entire living space with coordinated Woods Decor sofas, armchairs, consoles, and ambient lighting before fabrication begins."
