@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;700;800&display=swap');
 @import "tailwindcss";
 
-:root {
+:root, html.theme-heritage {
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-cinzel: 'Cinzel', serif;
-  --font-sans: 'Plus Jakarta Sans', 'Jost', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
   
   --bg-bone: #FBF9F5;
   --bg-bone-surface: #F4F0E8;
@@ -14,31 +14,33 @@
   --accent-brass: #BFA16F;
   --accent-brass-dark: #9E7E47;
   --accent-walnut: #4A3528;
+
+  --theme-card-bg: #F4F0E8;
+  --theme-card-border: #E8E2D5;
+}
+
+html.theme-avant-garde {
+  --font-serif: 'Syne', 'Space Grotesk', system-ui, sans-serif;
+  --font-cinzel: 'Syne', sans-serif;
+  --font-sans: 'Space Grotesk', sans-serif;
+
+  --bg-bone: #0D0E11;
+  --bg-bone-surface: #16181D;
+  --border-travertine: #262A33;
+  --ink-charcoal: #F2F4F8;
+  --text-muted: #8E96A4;
+  --accent-brass: #D8E82E;
+  --accent-brass-dark: #B5C418;
+  --accent-walnut: #788090;
+
+  --theme-card-bg: #16181D;
+  --theme-card-border: #2E333E;
 }
 
 @theme {
-  --color-bone-50: #FBF9F5;
-  --color-bone-100: #F4F0E8;
-  --color-bone-200: #E8E2D5;
-  --color-bone-300: #D8CEBE;
-  
-  --color-charcoal-900: #141312;
-  --color-charcoal-800: #1F1D1B;
-  --color-charcoal-700: #2E2C2A;
-  --color-charcoal-500: #66625D;
-  --color-charcoal-400: #8C8780;
-  
-  --color-walnut-800: #33231A;
-  --color-walnut-700: #4A3528;
-  --color-walnut-600: #5C4033;
-  
-  --color-brass-400: #D4BC8B;
-  --color-brass-500: #BFA16F;
-  --color-brass-600: #9E7E47;
-  
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-cinzel: 'Cinzel', serif;
-  --font-sans: 'Plus Jakarta Sans', 'Jost', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
 }
 
 html {
@@ -46,6 +48,7 @@ html {
   background-color: var(--bg-bone);
   color: var(--ink-charcoal);
   font-family: var(--font-sans);
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 body {
@@ -57,11 +60,11 @@ body {
 }
 
 ::selection {
-  background: #BFA16F;
-  color: #FFFFFF;
+  background: var(--accent-brass);
+  color: #141312;
 }
 
-/* Typography Helpers */
+/* Dynamic Theme Typography Helpers */
 .font-serif {
   font-family: var(--font-serif);
 }
@@ -133,10 +136,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D8CEBE;
+  background: var(--border-travertine);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #BFA16F;
+  background: var(--accent-brass);
 }
