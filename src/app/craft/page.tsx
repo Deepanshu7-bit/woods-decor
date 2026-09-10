@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight, ArrowRight, Check, Compass, Ruler, Shield, Sparkles, Layers, Eye } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import TechnicalRule from "@/components/ui/TechnicalRule";
+import AnimatedFurnitureVector from "@/components/ui/AnimatedFurnitureVector";
 
 interface CraftPhase {
   id: string;
@@ -453,6 +454,11 @@ export default function CraftJourneyInteractivePage() {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Master Vector Anatomical Schematic Showcase */}
+        <div className="mb-16">
+          <AnimatedFurnitureVector />
         </div>
 
         <TechnicalRule label="ATELIER DISCIPLINES" theme="dark" />
