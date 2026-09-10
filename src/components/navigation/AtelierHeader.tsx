@@ -5,8 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, ArrowUpRight } from "lucide-react";
 import FullscreenMenu from "./FullscreenMenu";
+import ThemeCustomizerPill from "./ThemeCustomizerPill";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 export default function AtelierHeader() {
+  const { theme } = useThemeStore();
   const [scrollY, setScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -92,52 +95,80 @@ export default function AtelierHeader() {
             href="/"
             className="flex flex-col items-center group text-center justify-self-start md:justify-self-center select-none"
           >
-            {/* Razor-Sharp SVG Royal Atelier Crown */}
-            <div className="w-5 h-5 mb-1 text-[#BFA16F] transition-transform duration-300 group-hover:scale-110 flex items-center justify-center">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-full h-full stroke-[#BFA16F] fill-[#BFA16F]/20"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M2 17h20v2H2v-2zM3.5 15l2-8 4.5 4.5 2-8 2 8 4.5-4.5 2 8H3.5z" />
-                <circle cx="5.5" cy="6" r="0.8" fill="#BFA16F" />
-                <circle cx="12" cy="2.5" r="0.8" fill="#BFA16F" />
-                <circle cx="18.5" cy="6" r="0.8" fill="#BFA16F" />
-              </svg>
+            {/* Morphing Logo: Royal Crown Crest vs Avant-Garde Modernist Monogram */}
+            <div className="w-6 h-6 mb-1 transition-transform duration-300 group-hover:scale-110 flex items-center justify-center">
+              {theme === "avant-garde" ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full stroke-[#D8E82E] fill-[#D8E82E]/15"
+                  strokeWidth="1.8"
+                >
+                  {/* Modernist Geometric Bauhaus Monogram */}
+                  <polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" className="stroke-[#D8E82E]" />
+                  <line x1="12" y1="2" x2="12" y2="22" className="stroke-[#D8E82E]/60" />
+                  <polyline points="2,8.5 12,14.5 22,8.5" className="stroke-[#D8E82E]" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full stroke-[#BFA16F] fill-[#BFA16F]/20"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2 17h20v2H2v-2zM3.5 15l2-8 4.5 4.5 2-8 2 8 4.5-4.5 2 8H3.5z" />
+                  <circle cx="5.5" cy="6" r="0.8" fill="#BFA16F" />
+                  <circle cx="12" cy="2.5" r="0.8" fill="#BFA16F" />
+                  <circle cx="18.5" cy="6" r="0.8" fill="#BFA16F" />
+                </svg>
+              )}
             </div>
 
             <span
-              className={`font-serif text-lg sm:text-xl tracking-[0.22em] uppercase font-medium leading-none transition-colors duration-300 ${
-                isDarkTheme ? "text-[#FFFFFF]" : "text-[#141312]"
+              className={`font-serif text-lg sm:text-xl tracking-[0.22em] uppercase font-semibold leading-none transition-colors duration-300 ${
+                theme === "avant-garde"
+                  ? "text-[#F2F4F8] font-bold tracking-[0.28em]"
+                  : isDarkTheme
+                  ? "text-[#FFFFFF]"
+                  : "text-[#141312]"
               }`}
             >
               Woods Decor
             </span>
             <span
-              className={`font-sans text-[8px] tracking-[0.32em] uppercase mt-0.5 font-medium transition-colors duration-300 ${
-                isDarkTheme ? "text-[#D4BC8B]" : "text-[#9E7E47]"
+              className={`font-sans text-[8px] tracking-[0.34em] uppercase mt-0.5 font-medium transition-colors duration-300 ${
+                theme === "avant-garde"
+                  ? "text-[#D8E82E]"
+                  : isDarkTheme
+                  ? "text-[#D4BC8B]"
+                  : "text-[#9E7E47]"
               }`}
             >
-              Atelier · Mohali
+              {theme === "avant-garde" ? "Modernist Gallery" : "Atelier · Mohali"}
             </span>
           </Link>
 
           {/* Right Controls — Pinned Right */}
-          <div className="flex items-center space-x-4 sm:space-x-5 justify-self-end">
+          <div className="flex items-center space-x-3 sm:space-x-4 justify-self-end">
+            {/* Dual Theme Customizer Switch */}
+            <ThemeCustomizerPill />
+
             <Link
               href="/bespoke"
-              className={`hidden lg:inline-flex items-center gap-2 text-[10px] font-sans uppercase tracking-[0.2em] font-semibold px-4 py-2 transition-all duration-300 shadow-sm ${
-                isDarkTheme
+              className={`hidden xl:inline-flex items-center gap-2 text-[10px] font-sans uppercase tracking-[0.2em] font-semibold px-4 py-2 transition-all duration-300 shadow-sm ${
+                theme === "avant-garde"
+                  ? "bg-[#D8E82E] text-[#0D0E11] border border-[#D8E82E] hover:bg-white hover:text-black"
+                  : isDarkTheme
                   ? "bg-white/10 text-white border border-[#BFA16F]/50 hover:bg-[#BFA16F] hover:text-[#141312] hover:border-[#BFA16F]"
                   : "bg-[#141312] text-white border border-[#141312] hover:bg-[#BFA16F] hover:border-[#BFA16F]"
               }`}
             >
               <span>Consultation</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#BFA16F] group-hover:text-inherit" />
+              <ArrowUpRight className="w-3.5 h-3.5 group-hover:text-inherit" />
             </Link>
 
             {/* Index Menu Trigger */}

@@ -21,9 +21,11 @@ import {
   CheckCircle2,
   Sliders,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Box
 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
+import ThreeRoomStudio from "@/components/3d/ThreeRoomStudio";
 import {
   useRoomStudioStore,
   ROOM_PRESETS,
@@ -33,6 +35,7 @@ import {
 import { formatPriceRequest } from "@/lib/utils";
 
 export default function RoomStudioPage() {
+  const [viewMode, setViewMode] = useState<"3d" | "2d">("3d");
   const {
     activePresetId,
     placedItems,
@@ -225,21 +228,25 @@ export default function RoomStudioPage() {
 
           {/* Action Toolbar */}
           <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => setAddDrawerOpen(true)}
-              className="inline-flex items-center gap-2 bg-[#BFA16F] text-[#141312] px-5 py-2.5 text-xs font-sans uppercase tracking-[0.2em] font-semibold hover:bg-white transition-all cursor-pointer shadow-lg"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Furniture</span>
-            </button>
+            {viewMode === "2d" ? (
+              <>
+                <button
+                  onClick={() => setAddDrawerOpen(true)}
+                  className="inline-flex items-center gap-2 bg-[#BFA16F] text-[#141312] px-5 py-2.5 text-xs font-sans uppercase tracking-[0.2em] font-semibold hover:bg-white transition-all cursor-pointer shadow-lg"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Furniture</span>
+                </button>
 
-            <button
-              onClick={handleDownloadSnapshot}
-              className="inline-flex items-center gap-2 bg-[#1F1D1B] text-white border border-[#2E2C2A] px-4 py-2.5 text-xs font-sans uppercase tracking-[0.2em] font-medium hover:border-[#BFA16F] hover:text-[#BFA16F] transition-all cursor-pointer shadow-lg"
-            >
-              <Download className="w-4 h-4" />
-              <span>Download Image (PNG)</span>
-            </button>
+                <button
+                  onClick={handleDownloadSnapshot}
+                  className="inline-flex items-center gap-2 bg-[#1F1D1B] text-white border border-[#2E2C2A] px-4 py-2.5 text-xs font-sans uppercase tracking-[0.2em] font-medium hover:border-[#BFA16F] hover:text-[#BFA16F] transition-all cursor-pointer shadow-lg"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download Image (PNG)</span>
+                </button>
+              </>
+            ) : null}
 
             <button
               onClick={() => setSaveModalOpen(true)}
@@ -251,28 +258,70 @@ export default function RoomStudioPage() {
           </div>
         </div>
 
-        {/* Preset Tabs */}
-        <div className="flex items-center gap-2.5 overflow-x-auto pb-4 mb-6 border-b border-[#2E2C2A] no-scrollbar">
-          <span className="text-[10px] font-sans uppercase tracking-widest text-[#8C8780] mr-2 shrink-0">
-            Room Presets:
-          </span>
-          {ROOM_PRESETS.map((p) => (
+        {/* Studio View Mode Switcher: 3D 360° Walkover vs 2D Spatial Plan */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-[#2E2C2A]">
+          <div className="inline-flex p-1 bg-[#1F1D1B] border border-[#2E2C2A] rounded-none">
             <button
-              key={p.id}
-              onClick={() => loadPreset(p.id)}
-              className={`px-4 py-2 text-xs font-sans uppercase tracking-[0.2em] whitespace-nowrap transition-all cursor-pointer ${
-                activePresetId === p.id
-                  ? "bg-[#BFA16F] text-[#141312] font-semibold shadow-md"
-                  : "bg-[#1F1D1B] text-[#8C8780] hover:text-white border border-[#2E2C2A]"
+              onClick={() => setViewMode("3d")}
+              className={`inline-flex items-center gap-2.5 px-5 py-2.5 text-xs font-sans uppercase tracking-[0.2em] transition-all cursor-pointer ${
+                viewMode === "3d"
+                  ? "bg-[#BFA16F] text-[#141312] font-bold shadow-md"
+                  : "text-[#8C8780] hover:text-white"
               }`}
             >
-              {p.name}
+              <Box className="w-4 h-4" />
+              <span>3D 360° Walkover Studio</span>
+              <span className={`text-[9px] px-1.5 py-0.5 font-mono ${
+                viewMode === "3d" ? "bg-[#141312] text-[#BFA16F]" : "bg-white/10 text-white"
+              }`}>
+                WEBGL
+              </span>
             </button>
-          ))}
+
+            <button
+              onClick={() => setViewMode("2d")}
+              className={`inline-flex items-center gap-2.5 px-5 py-2.5 text-xs font-sans uppercase tracking-[0.2em] transition-all cursor-pointer ${
+                viewMode === "2d"
+                  ? "bg-[#BFA16F] text-[#141312] font-bold shadow-md"
+                  : "text-[#8C8780] hover:text-white"
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>2D Spatial Plan</span>
+            </button>
+          </div>
+
+          {viewMode === "2d" && (
+            /* Preset Tabs */
+            <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar">
+              <span className="text-[10px] font-sans uppercase tracking-widest text-[#8C8780] mr-2 shrink-0">
+                Presets:
+              </span>
+              {ROOM_PRESETS.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => loadPreset(p.id)}
+                  className={`px-3 py-1.5 text-xs font-sans uppercase tracking-[0.18em] whitespace-nowrap transition-all cursor-pointer ${
+                    activePresetId === p.id
+                      ? "bg-[#BFA16F] text-[#141312] font-semibold shadow-md"
+                      : "bg-[#1F1D1B] text-[#8C8780] hover:text-white border border-[#2E2C2A]"
+                  }`}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Main Room Canvas Workspace */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+        {/* 3D WebGL Walkover Studio View */}
+        {viewMode === "3d" ? (
+          <div className="mb-14">
+            <ThreeRoomStudio />
+          </div>
+        ) : (
+          /* Main 2D Room Canvas Workspace */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
           {/* Left / Center: Interactive Drag-and-Drop Room Stage */}
           <div className="lg:col-span-8 flex flex-col space-y-4">
             <div
@@ -531,6 +580,7 @@ export default function RoomStudioPage() {
             )}
           </div>
         </div>
+      )}
 
         {/* Curation Item Schedule Summary Table */}
         <div className="bg-[#1F1D1B] border border-[#2E2C2A] p-6 sm:p-8 mb-16">
